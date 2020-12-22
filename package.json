@@ -1,0 +1,22 @@
+{
+  "name": "reactspeedrun",
+  "version": "1.0.0",
+  "description": "React.js speedrun",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DreadArceus/ReactSpeedrun.git"
+  },
+  "author": "DreadArceus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DreadArceus/ReactSpeedrun/issues"
+  },
+  "homepage": "https://github.com/DreadArceus/ReactSpeedrun#readme",
+  "dependencies": {
+    "create-react-app": "^4.0.1"
+  }
+}
