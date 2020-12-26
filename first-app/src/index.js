@@ -16,6 +16,8 @@ class Board extends React.Component {
     this.state = {
       squares: Array(9).fill(null),
       xIsNext: true,
+      gameInProgress: true,
+      winner: "",
     };
   }
   renderSquare(i) {
@@ -29,15 +31,22 @@ class Board extends React.Component {
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    if (squares[i]) {
+    if (!this.state.gameInProgress || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
-    this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+      gameInProgress: !checkState(squares, i),
+      winner: checkState(squares, i),
+    });
   }
 
   render() {
-    const status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+    const status = this.state.gameInProgress
+      ? `Next player: ${this.state.xIsNext ? "X" : "O"}`
+      : this.state.winner;
     return (
       <div>
         <div className="status">{status}</div>
@@ -80,3 +89,24 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(<Game />, document.getElementById("root"));
+
+function checkState(squares, i) {
+  const r = i - (i % 3);
+  const c = i % 3;
+  if (
+    (squares[r] === squares[r + 1] && squares[r] === squares[r + 2]) ||
+    (squares[c] === squares[c + 3] && squares[c] === squares[c + 6]) ||
+    (squares[4] &&
+      i % 2 === 0 &&
+      ((squares[4] === squares[0] && squares[4] === squares[8]) ||
+        (squares[4] === squares[2] && squares[4] === squares[6])))
+  ) {
+    return `Winner: ${squares[i]}`;
+  }
+  for (var x = 0; x < squares.length; x++) {
+    if (!squares[x]) {
+      return null;
+    }
+  }
+  return "Draw";
+}
