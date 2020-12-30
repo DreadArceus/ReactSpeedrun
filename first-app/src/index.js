@@ -46,19 +46,22 @@ class Board extends React.Component {
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { history: [{ squares: Array(9).fill(null) }], xIsNext: true };
+    this.state = {
+      history: [{ squares: Array(9).fill(null), xIsNext: true }],
+      stepNumber: 0,
+    };
   }
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const status = !checkState(current.squares)
-      ? `Next player: ${this.state.xIsNext ? "X" : "O"}`
+      ? `Next player: ${current.xIsNext ? "X" : "O"}`
       : checkState(current.squares);
     const moves = history.map((move, index) => {
       const desc = index ? `Go to move #${index}` : `Go to game start`;
       return (
         <li key={index}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button onClick={() => this.jumpTo(index)}>{desc}</button>
         </li>
       );
     });
@@ -78,21 +81,25 @@ class Game extends React.Component {
     );
   }
   handleClick(i) {
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (checkState(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? "X" : "O";
+    squares[i] = current.xIsNext ? "X" : "O";
     this.setState({
       history: history.concat([
         {
           squares: squares,
+          xIsNext: !current.xIsNext,
         },
       ]),
-      xIsNext: !this.state.xIsNext,
+      stepNumber: this.state.stepNumber + 1,
     });
+  }
+  jumpTo(index) {
+    this.setState({ stepNumber: index });
   }
 }
 
