@@ -65,9 +65,14 @@ class Game extends React.Component {
             history[index].squares
           )}`
         : `Go to game start`;
+      const boldActive = {
+        fontWeight: index === this.state.stepNumber ? "bold" : "normal",
+      };
       return (
         <li key={index}>
-          <button onClick={() => this.jumpTo(index)}>{desc}</button>
+          <button onClick={() => this.jumpTo(index)} style={boldActive}>
+            {desc}
+          </button>
         </li>
       );
     });
