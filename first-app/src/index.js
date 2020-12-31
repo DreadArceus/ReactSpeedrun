@@ -59,7 +59,12 @@ class Game extends React.Component {
       ? `Next player: ${this.state.xIsNext ? "X" : "O"}`
       : checkState(current.squares);
     const moves = history.map((move, index) => {
-      const desc = index ? `Go to move #${index}` : `Go to game start`;
+      const desc = index
+        ? `Go to move #${index} ${findLastMove(
+            history[index - 1].squares,
+            history[index].squares
+          )}`
+        : `Go to game start`;
       return (
         <li key={index}>
           <button onClick={() => this.jumpTo(index)}>{desc}</button>
@@ -107,6 +112,16 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(<Game />, document.getElementById("root"));
+
+function findLastMove(squares_old, squares_new) {
+  var i;
+  for (i = 0; i < 9; i++) {
+    if (squares_new[i] !== squares_old[i]) {
+      break;
+    }
+  }
+  return `(${Math.floor(i / 3) + 1}, ${(i % 3) + 1})`;
+}
 
 function checkState(squares) {
   const r = [0, 3, 6];
