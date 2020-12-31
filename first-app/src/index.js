@@ -47,7 +47,8 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      history: [{ squares: Array(9).fill(null), xIsNext: true }],
+      history: [{ squares: Array(9).fill(null) }],
+      xIsNext: true,
       stepNumber: 0,
     };
   }
@@ -55,7 +56,7 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const status = !checkState(current.squares)
-      ? `Next player: ${current.xIsNext ? "X" : "O"}`
+      ? `Next player: ${this.state.xIsNext ? "X" : "O"}`
       : checkState(current.squares);
     const moves = history.map((move, index) => {
       const desc = index ? `Go to move #${index}` : `Go to game start`;
@@ -87,19 +88,19 @@ class Game extends React.Component {
     if (checkState(squares) || squares[i]) {
       return;
     }
-    squares[i] = current.xIsNext ? "X" : "O";
+    squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
       history: history.concat([
         {
           squares: squares,
-          xIsNext: !current.xIsNext,
         },
       ]),
+      xIsNext: !this.state.xIsNext,
       stepNumber: this.state.stepNumber + 1,
     });
   }
   jumpTo(index) {
-    this.setState({ stepNumber: index });
+    this.setState({ stepNumber: index, xIsNext: index % 2 === 0 });
   }
 }
 
