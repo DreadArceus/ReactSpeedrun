@@ -3,8 +3,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 
 function Square(props) {
+  const highlightWin = { background: props.highlightCheck ? "pink" : "white" };
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className="square" onClick={props.onClick} style={highlightWin}>
       {props.value}
     </button>
   );
@@ -16,6 +17,7 @@ class Board extends React.Component {
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        highlightCheck={this.props.highlightCheck(i)}
       />
     );
   }
@@ -73,6 +75,7 @@ class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
+            highlightCheck={(i) => this.highlightCheck(i)}
           />
         </div>
         <div className="game-info">
@@ -112,6 +115,40 @@ class Game extends React.Component {
       return <ol> {moves}</ol>;
     }
     return <ol reversed> {moves.reverse()}</ol>;
+  }
+  highlightCheck(query) {
+    const squares = this.state.history[this.state.stepNumber].squares;
+    var winTrio = [];
+    const r = [0, 3, 6];
+    const c = [0, 1, 2];
+    for (var i = 0; i < 3; i++) {
+      if (
+        squares[r[i]] &&
+        squares[r[i]] === squares[r[i] + 1] &&
+        squares[r[i]] === squares[r[i] + 2]
+      ) {
+        winTrio = [r[i], r[i] + 1, r[i] + 2];
+        break;
+      }
+      if (
+        squares[c[i]] &&
+        squares[c[i]] === squares[c[i] + 3] &&
+        squares[c[i]] === squares[c[i] + 6]
+      ) {
+        winTrio = [c[i], c[i] + 3, c[i] + 6];
+        break;
+      }
+    }
+    if (squares[4] && squares[4] === squares[0] && squares[4] === squares[8]) {
+      winTrio = [0, 4, 8];
+    } else if (
+      squares[4] &&
+      squares[4] === squares[2] &&
+      squares[4] === squares[6]
+    ) {
+      winTrio = [2, 4, 6];
+    }
+    return winTrio.includes(query);
   }
 }
 
